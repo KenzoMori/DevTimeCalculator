@@ -415,7 +415,7 @@ watch(
                 v-model="willPerformReleaseTasks"
               />
               <label for="releaseTasks" style="padding-left: 8px">
-                We will perform release tasks today. (reduce
+                There will be a production release today. (reduce
                 {{ HOURS_FOR_RELEASE_TASKS }} hour)
               </label>
             </th>
