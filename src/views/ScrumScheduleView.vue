@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import AbsentMark from '@/components/AbsentMark.vue'
 
 const MAX_MEMBERS = 9
 const DEV_HOURS_PER_LINE = 7.5
@@ -420,16 +421,6 @@ watch(
             </th>
           </tr>
           <tr>
-            <th></th>
-            <th></th>
-            <th colspan="1">absentees</th>
-            <th></th>
-            <th>reduced lines</th>
-            <th>reduced hours</th>
-            <th>attendees</th>
-            <th>lines</th>
-          </tr>
-          <tr>
             <th colspan="8" style="text-align: left">
               <label for="numOfMembersFullDayOff"
                 >Number of full day off members:
@@ -443,6 +434,16 @@ watch(
                 v-model="numOfMembersFullDayOff"
               />
             </th>
+          </tr>
+          <tr>
+            <th></th>
+            <th></th>
+            <th colspan="1">absentees</th>
+            <th></th>
+            <th>reduced lines</th>
+            <th>reduced hours</th>
+            <th>attendees</th>
+            <th>lines</th>
           </tr>
         </thead>
         <tbody>
@@ -482,6 +483,7 @@ watch(
               {{ schedule.time }}
             </td>
             <td :id="`col_num_of_absentees_${schedule.time}`">
+              <AbsentMark :numOfAbsentees="schedule.numOfAbsentees" />
               {{ schedule.numOfAbsentees }}
             </td>
             <td :id="`col_adjust_absentees_${schedule.time}`">
@@ -604,7 +606,8 @@ table {
   }
 
   [id*='col_event_break'] {
-    min-width: 120px;
+    min-width: 112px;
+    width: 112px;
     text-align: center;
     /* background-color: white; */
     display: flex;
@@ -629,10 +632,13 @@ table {
     }
   }
   [id*='col_time'] {
+    min-width: 80px;
+    width: 80px;
     text-align: right;
   }
   [id*='col_num_of_absentees'] {
-    min-width: 64px;
+    min-width: 143px;
+    width: 143px;
     text-align: right;
   }
   [id*='col_adjust_absentees'] {
