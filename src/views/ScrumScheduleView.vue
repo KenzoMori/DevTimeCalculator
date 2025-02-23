@@ -549,16 +549,6 @@ main {
   margin-left: 16px;
   overflow: auto;
 }
-/* ライトモード用のスタイル（オプション） */
-@media (prefers-color-scheme: light) {
-  thead {
-    background-color: #f8f9fa; /* 明るめの背景色 */
-    color: #000; /* 黒い文字色 */
-  }
-  thead th {
-    border-bottom: 1px solid #ddd; /* ボーダー */
-  }
-}
 table {
   border-collapse: collapse;
   font-size: 24px;
