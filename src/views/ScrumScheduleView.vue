@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import AbsentMark from '@/components/AbsentMark.vue'
-
+import AbasentMap from '@/components/AbsentMap.vue'
 const MAX_MEMBERS = 9
 const DEV_HOURS_PER_LINE = 7.5
 const MAX_LINES = 4
@@ -11,6 +11,26 @@ const HOURS_FOR_RELEASE_TASKS = 1
 const willPerformReleaseTasks = ref(false)
 const numOfMembersFullDayOff = ref(0)
 
+/**
+ * スケジュールを作成
+ * @param time
+ * @param numOfAbsentees
+ * @param willAllocateToEvent
+ * @param willAllocateToBreak
+ */
+function createSchedule(
+  time: string,
+  numOfAbsentees: number | null,
+  willAllocateToEvent: boolean,
+  willAllocateToBreak: boolean,
+) {
+  return {
+    time,
+    numOfAbsentees: numOfAbsentees,
+    willAllocateToEvent: willAllocateToEvent,
+    willAllocateToBreak: willAllocateToBreak,
+  }
+}
 type Schedule = {
   time: string
   numOfAbsentees: number | null
@@ -18,214 +38,40 @@ type Schedule = {
   willAllocateToBreak: boolean
 }
 const scheduleList = ref<Schedule[]>([
-  {
-    time: '9:30',
-    numOfAbsentees: null,
-    willAllocateToEvent: true,
-    willAllocateToBreak: false,
-  }, // 朝会
-  {
-    time: '9:45',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '10:00',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '10:15',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '10:30',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '10:45',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '11:00',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '11:15',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '11:30',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '11:45',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '12:00',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '12:15',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    // 昼休み
-    time: '12:30',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: true,
-  },
-  {
-    // 昼休み
-    time: '12:45',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: true,
-  },
-  {
-    // 昼休み
-    time: '13:00',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: true,
-  },
-  {
-    // 昼休み
-    time: '13:15',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: true,
-  },
-  {
-    time: '13:30',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '13:45',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '14:00',
-    numOfAbsentees: null,
-    willAllocateToEvent: true,
-    willAllocateToBreak: false,
-  }, // 昼会
-  {
-    time: '14:15',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '14:30',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '14:45',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '15:00',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '15:15',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '15:30',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '15:45',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '16:00',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '16:15',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '16:30',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '16:45',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '17:00',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '17:15',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '17:30',
-    numOfAbsentees: null,
-    willAllocateToEvent: false,
-    willAllocateToBreak: false,
-  },
-  {
-    time: '17:45',
-    numOfAbsentees: null,
-    willAllocateToEvent: true,
-    willAllocateToBreak: false,
-  }, // 夕会
+  createSchedule('9:30', null, true, false), //朝会
+  createSchedule('9:45', null, false, false),
+  createSchedule('10:00', null, false, false),
+  createSchedule('10:15', null, false, false),
+  createSchedule('10:30', null, false, false),
+  createSchedule('10:45', null, false, false),
+  createSchedule('11:00', null, false, false),
+  createSchedule('11:15', null, false, false),
+  createSchedule('11:30', null, false, false),
+  createSchedule('11:45', null, false, false),
+  createSchedule('12:00', null, false, false),
+  createSchedule('12:15', null, false, false),
+  createSchedule('12:30', null, false, true), //昼休み
+  createSchedule('12:45', null, false, true), //昼休み
+  createSchedule('13:00', null, false, true), //昼休み
+  createSchedule('13:15', null, false, true), //昼休み
+  createSchedule('13:30', null, false, false),
+  createSchedule('13:45', null, false, false),
+  createSchedule('14:00', null, true, false), //昼会
+  createSchedule('14:15', null, false, false),
+  createSchedule('14:30', null, false, false),
+  createSchedule('14:45', null, false, false),
+  createSchedule('15:00', null, false, false),
+  createSchedule('15:15', null, false, false),
+  createSchedule('15:30', null, false, false),
+  createSchedule('15:45', null, false, false),
+  createSchedule('16:00', null, false, false),
+  createSchedule('16:15', null, false, false),
+  createSchedule('16:30', null, false, false),
+  createSchedule('16:45', null, false, false),
+  createSchedule('17:00', null, false, false),
+  createSchedule('17:15', null, false, false),
+  createSchedule('17:30', null, false, false),
+  createSchedule('17:45', null, true, false), //夕会
 ])
 
 /**
@@ -385,6 +231,12 @@ watch(
     })
   },
 )
+/**
+ * 欠席者数のリスト
+ */
+const numOfAbsenteesList = computed(() => {
+  return scheduleList.value.map(schedule => schedule.numOfAbsentees)
+})
 </script>
 
 <template>
@@ -521,6 +373,10 @@ watch(
         </tbody>
       </table>
     </main>
+    <aside>
+      <!-- {{ numOfAbsenteesList }} -->
+      <AbasentMap :numOfAbsenteesList="numOfAbsenteesList"></AbasentMap>
+    </aside>
   </div>
 </template>
 
